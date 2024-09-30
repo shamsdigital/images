@@ -1,5 +1,5 @@
 # main.py
-
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from supabase import create_client, Client
@@ -33,6 +33,24 @@ processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
 class SearchRequest(BaseModel):
     image_url: str
     threshold: float = 0.8  # Default threshold
+
+
+# Define allowed origins (replace with your frontend URL)
+origins = [
+    "https://your-frontend-domain.com",
+    "http://localhost:3000",  # Add your development URLs
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,  # List of allowed origins
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+
 
 class SearchResponse(BaseModel):
     matching_images: list
